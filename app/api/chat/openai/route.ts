@@ -4,8 +4,9 @@ import { OpenAIStream, StreamingTextResponse } from "ai"
 import { ServerRuntime } from "next"
 import OpenAI from "openai"
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs"
+import { SocksProxyAgent } from "socks-proxy-agent"
 
-export const runtime: ServerRuntime = "edge"
+export const runtime: ServerRuntime = "nodejs"
 
 export async function POST(request: Request) {
   const json = await request.json()
@@ -19,10 +20,26 @@ export async function POST(request: Request) {
 
     checkApiKey(profile.openai_api_key, "OpenAI")
 
-    const openai = new OpenAI({
-      apiKey: profile.openai_api_key || "",
-      organization: profile.openai_organization_id
-    })
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = new SocksProxyAgent(
+        `${process.env.PROXY_PROTOCOL}://${process.env.PROXY_ADDRESS}:${process.env.PROXY_PORT}`
+      )
+    }
+    let openai
+    if (isProxyEnabled) {
+      openai = new OpenAI({
+        apiKey: profile.openai_api_key || "",
+        organization: profile.openai_organization_id,
+        httpAgent: proxyAgent
+      })
+    } else {
+      openai = new OpenAI({
+        apiKey: profile.openai_api_key || "",
+        organization: profile.openai_organization_id
+      })
+    }
 
     const response = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],

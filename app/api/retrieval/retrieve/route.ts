@@ -3,6 +3,7 @@ import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { Database } from "@/supabase/types"
 import { createClient } from "@supabase/supabase-js"
 import OpenAI from "openai"
+import { SocksProxyAgent } from "socks-proxy-agent"
 
 export async function POST(request: Request) {
   const json = await request.json()
@@ -34,21 +35,47 @@ export async function POST(request: Request) {
     let chunks: any[] = []
 
     let openai
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = new SocksProxyAgent(
+        `${process.env.PROXY_PROTOCOL}://${process.env.PROXY_ADDRESS}:${process.env.PROXY_PORT}`
+      )
+    }
     if (profile.use_azure_openai) {
-      openai = new OpenAI({
-        apiKey: profile.azure_openai_api_key || "",
-        baseURL: `${profile.azure_openai_endpoint}/openai/deployments/${profile.azure_openai_embeddings_id}`,
-        defaultQuery: { "api-version": "2023-12-01-preview" },
-        defaultHeaders: { "api-key": profile.azure_openai_api_key }
-      })
+      if (isProxyEnabled) {
+        openai = new OpenAI({
+          apiKey: profile.azure_openai_api_key || "",
+          baseURL: `${profile.azure_openai_endpoint}/openai/deployments/${profile.azure_openai_embeddings_id}`,
+          defaultQuery: { "api-version": "2023-12-01-preview" },
+          defaultHeaders: { "api-key": profile.azure_openai_api_key },
+          httpAgent: proxyAgent
+        })
+      } else {
+        openai = new OpenAI({
+          apiKey: profile.azure_openai_api_key || "",
+          baseURL: `${profile.azure_openai_endpoint}/openai/deployments/${profile.azure_openai_embeddings_id}`,
+          defaultQuery: { "api-version": "2023-12-01-preview" },
+          defaultHeaders: { "api-key": profile.azure_openai_api_key }
+        })
+      }
     } else {
-      openai = new OpenAI({
-        apiKey: profile.openai_api_key || "",
-        organization: profile.openai_organization_id
-      })
+      if (isProxyEnabled) {
+        openai = new OpenAI({
+          apiKey: profile.openai_api_key || "",
+          organization: profile.openai_organization_id,
+          httpAgent: proxyAgent
+        })
+      } else {
+        openai = new OpenAI({
+          apiKey: profile.openai_api_key || "",
+          organization: profile.openai_organization_id
+        })
+      }
     }
 
     if (embeddingsProvider === "openai") {
+      console.log("provider === openai")
       const response = await openai.embeddings.create({
         model: "text-embedding-3-small",
         input: userInput
@@ -56,6 +83,9 @@ export async function POST(request: Request) {
 
       const openaiEmbedding = response.data.map(item => item.embedding)[0]
 
+      console.log("oepnaiEmbedding: ", openaiEmbedding)
+      console.log("sourceCount: ", sourceCount)
+      console.log("uniqueFileIds: ", uniqueFileIds)
       const { data: openaiFileItems, error: openaiError } =
         await supabaseAdmin.rpc("match_file_items_openai", {
           query_embedding: openaiEmbedding as any,
@@ -63,12 +93,15 @@ export async function POST(request: Request) {
           file_ids: uniqueFileIds
         })
 
+      console.log(openaiError)
       if (openaiError) {
         throw openaiError
       }
+      console.log("after openaiError")
 
       chunks = openaiFileItems
     } else if (embeddingsProvider === "local") {
+      console.log("provider === local")
       const localEmbedding = await generateLocalEmbedding(userInput)
 
       const { data: localFileItems, error: localFileItemsError } =
@@ -78,6 +111,7 @@ export async function POST(request: Request) {
           file_ids: uniqueFileIds
         })
 
+      console.log("after match_file_items_local")
       if (localFileItemsError) {
         throw localFileItemsError
       }
@@ -85,9 +119,11 @@ export async function POST(request: Request) {
       chunks = localFileItems
     }
 
+    console.log("before chunks?.sort")
     const mostSimilarChunks = chunks?.sort(
       (a, b) => b.similarity - a.similarity
     )
+    console.log("after sort")
 
     return new Response(JSON.stringify({ results: mostSimilarChunks }), {
       status: 200

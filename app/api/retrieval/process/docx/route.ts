@@ -6,6 +6,7 @@ import { FileItemChunk } from "@/types"
 import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
+import { SocksProxyAgent } from "socks-proxy-agent"
 
 export async function POST(req: Request) {
   const json = await req.json()
@@ -47,18 +48,43 @@ export async function POST(req: Request) {
     let embeddings: any = []
 
     let openai
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = new SocksProxyAgent(
+        `${process.env.PROXY_PROTOCOL}://${process.env.PROXY_ADDRESS}:${process.env.PROXY_PORT}`
+      )
+    }
     if (profile.use_azure_openai) {
-      openai = new OpenAI({
-        apiKey: profile.azure_openai_api_key || "",
-        baseURL: `${profile.azure_openai_endpoint}/openai/deployments/${profile.azure_openai_embeddings_id}`,
-        defaultQuery: { "api-version": "2023-12-01-preview" },
-        defaultHeaders: { "api-key": profile.azure_openai_api_key }
-      })
+      if (isProxyEnabled) {
+        openai = new OpenAI({
+          apiKey: profile.azure_openai_api_key || "",
+          baseURL: `${profile.azure_openai_endpoint}/openai/deployments/${profile.azure_openai_embeddings_id}`,
+          defaultQuery: { "api-version": "2023-12-01-preview" },
+          defaultHeaders: { "api-key": profile.azure_openai_api_key },
+          httpAgent: proxyAgent
+        })
+      } else {
+        openai = new OpenAI({
+          apiKey: profile.azure_openai_api_key || "",
+          baseURL: `${profile.azure_openai_endpoint}/openai/deployments/${profile.azure_openai_embeddings_id}`,
+          defaultQuery: { "api-version": "2023-12-01-preview" },
+          defaultHeaders: { "api-key": profile.azure_openai_api_key }
+        })
+      }
     } else {
-      openai = new OpenAI({
-        apiKey: profile.openai_api_key || "",
-        organization: profile.openai_organization_id
-      })
+      if (isProxyEnabled) {
+        openai = new OpenAI({
+          apiKey: profile.openai_api_key || "",
+          organization: profile.openai_organization_id,
+          httpAgent: proxyAgent
+        })
+      } else {
+        openai = new OpenAI({
+          apiKey: profile.openai_api_key || "",
+          organization: profile.openai_organization_id
+        })
+      }
     }
 
     if (embeddingsProvider === "openai") {
