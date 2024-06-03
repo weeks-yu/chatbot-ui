@@ -1,5 +1,5 @@
 import { generateLocalEmbedding } from "@/lib/generate-local-embedding"
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
 import { Database } from "@/supabase/types"
 import { createClient } from "@supabase/supabase-js"
 import OpenAI from "openai"
@@ -38,9 +38,7 @@ export async function POST(request: Request) {
     let proxyAgent
     const isProxyEnabled = process.env.USE_PROXY === "true"
     if (isProxyEnabled) {
-      proxyAgent = new SocksProxyAgent(
-        `${process.env.PROXY_PROTOCOL}://${process.env.PROXY_ADDRESS}:${process.env.PROXY_PORT}`
-      )
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
     }
     if (profile.use_azure_openai) {
       if (isProxyEnabled) {

@@ -1,4 +1,4 @@
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
 import { ServerRuntime } from "next"
 import OpenAI from "openai"
 
@@ -10,10 +10,22 @@ export async function GET() {
 
     checkApiKey(profile.openai_api_key, "OpenAI")
 
-    const openai = new OpenAI({
-      apiKey: profile.openai_api_key || "",
-      organization: profile.openai_organization_id
-    })
+    let openai
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      openai = new OpenAI({
+        apiKey: profile.openai_api_key || "",
+        organization: profile.openai_organization_id,
+        httpAgent: proxyAgent
+      })
+    } else {
+      openai = new OpenAI({
+        apiKey: profile.openai_api_key || "",
+        organization: profile.openai_organization_id
+      })
+    }
 
     const myAssistants = await openai.beta.assistants.list({
       limit: 100

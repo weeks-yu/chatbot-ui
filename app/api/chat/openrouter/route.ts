@@ -1,4 +1,4 @@
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import { ServerRuntime } from "next"
@@ -19,10 +19,22 @@ export async function POST(request: Request) {
 
     checkApiKey(profile.openrouter_api_key, "OpenRouter")
 
-    const openai = new OpenAI({
-      apiKey: profile.openrouter_api_key || "",
-      baseURL: "https://openrouter.ai/api/v1"
-    })
+    let openai
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      openai = new OpenAI({
+        apiKey: profile.openrouter_api_key || "",
+        baseURL: "https://openrouter.ai/api/v1",
+        httpAgent: proxyAgent
+      })
+    } else {
+      openai = new OpenAI({
+        apiKey: profile.openrouter_api_key || "",
+        baseURL: "https://openrouter.ai/api/v1"
+      })
+    }
 
     const response = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],

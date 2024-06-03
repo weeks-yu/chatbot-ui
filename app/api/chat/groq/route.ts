@@ -1,5 +1,5 @@
 import { CHAT_SETTING_LIMITS } from "@/lib/chat-setting-limits"
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import OpenAI from "openai"
@@ -18,10 +18,22 @@ export async function POST(request: Request) {
     checkApiKey(profile.groq_api_key, "G")
 
     // Groq is compatible with the OpenAI SDK
-    const groq = new OpenAI({
-      apiKey: profile.groq_api_key || "",
-      baseURL: "https://api.groq.com/openai/v1"
-    })
+    let groq
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      groq = new OpenAI({
+        apiKey: profile.groq_api_key || "",
+        baseURL: "https://api.groq.com/openai/v1",
+        httpAgent: proxyAgent
+      })
+    } else {
+      groq = new OpenAI({
+        apiKey: profile.groq_api_key || "",
+        baseURL: "https://api.groq.com/openai/v1"
+      })
+    }
 
     const response = await groq.chat.completions.create({
       model: chatSettings.model,

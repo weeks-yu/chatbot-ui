@@ -1,4 +1,4 @@
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
 import { ChatAPIPayload } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import OpenAI from "openai"
@@ -43,13 +43,26 @@ export async function POST(request: Request) {
         }
       )
     }
-
-    const azureOpenai = new OpenAI({
-      apiKey: KEY,
-      baseURL: `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`,
-      defaultQuery: { "api-version": "2023-12-01-preview" },
-      defaultHeaders: { "api-key": KEY }
-    })
+    let azureOpenai
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      azureOpenai = new OpenAI({
+        apiKey: KEY,
+        baseURL: `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`,
+        defaultQuery: { "api-version": "2023-12-01-preview" },
+        defaultHeaders: { "api-key": KEY },
+        httpAgent: proxyAgent
+      })
+    } else {
+      azureOpenai = new OpenAI({
+        apiKey: KEY,
+        baseURL: `${ENDPOINT}/openai/deployments/${DEPLOYMENT_ID}`,
+        defaultQuery: { "api-version": "2023-12-01-preview" },
+        defaultHeaders: { "api-key": KEY }
+      })
+    }
 
     const response = await azureOpenai.chat.completions.create({
       model: DEPLOYMENT_ID as ChatCompletionCreateParamsBase["model"],

@@ -1,5 +1,5 @@
 import { CHAT_SETTING_LIMITS } from "@/lib/chat-setting-limits"
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import OpenAI from "openai"
@@ -19,10 +19,22 @@ export async function POST(request: Request) {
     checkApiKey(profile.mistral_api_key, "Mistral")
 
     // Mistral is compatible the OpenAI SDK
-    const mistral = new OpenAI({
-      apiKey: profile.mistral_api_key || "",
-      baseURL: "https://api.mistral.ai/v1"
-    })
+    let mistral
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      mistral = new OpenAI({
+        apiKey: profile.mistral_api_key || "",
+        baseURL: "https://api.mistral.ai/v1",
+        httpAgent: proxyAgent
+      })
+    } else {
+      mistral = new OpenAI({
+        apiKey: profile.mistral_api_key || "",
+        baseURL: "https://api.mistral.ai/v1"
+      })
+    }
 
     const response = await mistral.chat.completions.create({
       model: chatSettings.model,

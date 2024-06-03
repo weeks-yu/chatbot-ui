@@ -71,3 +71,13 @@ export function checkApiKey(apiKey: string | null, keyName: string) {
     throw new Error(`${keyName} API Key not found`)
   }
 }
+
+export function getProxyAgent(proto: string, address: string, port: string) {
+  let proxyAgent
+  if (proto === "socks5h") {
+    proxyAgent = new SocksProxyAgent(`${proto}://${address}:${port}`)
+  } else {
+    throw new Error(`ProxyAgent: ${proto} not implemented`)
+  }
+  return proxyAgent
+}

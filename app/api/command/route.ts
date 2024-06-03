@@ -1,5 +1,5 @@
 import { CHAT_SETTING_LIMITS } from "@/lib/chat-setting-limits"
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
 import OpenAI from "openai"
 
 export const runtime = "edge"
@@ -14,11 +14,22 @@ export async function POST(request: Request) {
     const profile = await getServerProfile()
 
     checkApiKey(profile.openai_api_key, "OpenAI")
-
-    const openai = new OpenAI({
-      apiKey: profile.openai_api_key || "",
-      organization: profile.openai_organization_id
-    })
+    let openai
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      openai = new OpenAI({
+        apiKey: profile.openai_api_key || "",
+        organization: profile.openai_organization_id,
+        httpAgent: proxyAgent
+      })
+    } else {
+      openai = new OpenAI({
+        apiKey: profile.openai_api_key || "",
+        organization: profile.openai_organization_id
+      })
+    }
 
     const response = await openai.chat.completions.create({
       model: "gpt-4-1106-preview",

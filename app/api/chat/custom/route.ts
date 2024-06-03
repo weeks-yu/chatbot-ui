@@ -1,3 +1,4 @@
+import { getProxyAgent } from "@/lib/server/server-chat-helpers"
 import { Database } from "@/supabase/types"
 import { ChatSettings } from "@/types"
 import { createClient } from "@supabase/supabase-js"
@@ -31,11 +32,23 @@ export async function POST(request: Request) {
     if (!customModel) {
       throw new Error(error.message)
     }
-
-    const custom = new OpenAI({
-      apiKey: customModel.api_key || "",
-      baseURL: customModel.base_url
-    })
+    
+    let custom
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      custom = new OpenAI({
+        apiKey: customModel.api_key || "",
+        baseURL: customModel.base_url,
+        httpAgent: proxyAgent
+      })
+    } else {
+      const custom = new OpenAI({
+        apiKey: customModel.api_key || "",
+        baseURL: customModel.base_url
+      })
+    }
 
     const response = await custom.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],

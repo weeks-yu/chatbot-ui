@@ -1,4 +1,4 @@
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import OpenAI from "openai"
@@ -18,10 +18,22 @@ export async function POST(request: Request) {
     checkApiKey(profile.perplexity_api_key, "Perplexity")
 
     // Perplexity is compatible the OpenAI SDK
-    const perplexity = new OpenAI({
-      apiKey: profile.perplexity_api_key || "",
-      baseURL: "https://api.perplexity.ai/"
-    })
+    let perplexity
+    let proxyAgent
+    const isProxyEnabled = process.env.USE_PROXY === "true"
+    if (isProxyEnabled) {
+      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      perplexity = new OpenAI({
+        apiKey: profile.perplexity_api_key || "",
+        baseURL: "https://api.perplexity.ai/",
+        httpAgent: proxyAgent
+      })
+    } else {
+      perplexity = new OpenAI({
+        apiKey: profile.perplexity_api_key || "",
+        baseURL: "https://api.perplexity.ai/"
+      })
+    }
 
     const response = await perplexity.chat.completions.create({
       model: chatSettings.model,
