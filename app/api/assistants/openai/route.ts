@@ -1,8 +1,9 @@
-import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ServerRuntime } from "next"
 import OpenAI from "openai"
+import { getProxyAgent } from "@/lib/server/server-proxy-helpers"
 
-export const runtime: ServerRuntime = "edge"
+export const runtime: ServerRuntime = "nodejs"
 
 export async function GET() {
   try {

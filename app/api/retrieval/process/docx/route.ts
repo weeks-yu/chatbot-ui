@@ -1,12 +1,12 @@
 import { generateLocalEmbedding } from "@/lib/generate-local-embedding"
 import { processDocX } from "@/lib/retrieval/processing"
-import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { Database } from "@/supabase/types"
 import { FileItemChunk } from "@/types"
 import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
-import { SocksProxyAgent } from "socks-proxy-agent"
+import { getProxyAgent } from "@/lib/server/server-proxy-helpers"
 
 export async function POST(req: Request) {
   const json = await req.json()

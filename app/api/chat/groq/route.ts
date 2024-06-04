@@ -1,10 +1,11 @@
 import { CHAT_SETTING_LIMITS } from "@/lib/chat-setting-limits"
-import { checkApiKey, getServerProfile, getProxyAgent } from "@/lib/server/server-chat-helpers"
+import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import OpenAI from "openai"
+import { getProxyAgent } from "@/lib/server/server-proxy-helpers"
 
-export const runtime = "edge"
+export const runtime = "nodejs"
 export async function POST(request: Request) {
   const json = await request.json()
   const { chatSettings, messages } = json as {
