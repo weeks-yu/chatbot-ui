@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         httpAgent: proxyAgent
       })
     } else {
-      const custom = new OpenAI({
+      custom = new OpenAI({
         apiKey: customModel.api_key || "",
         baseURL: customModel.base_url
       })
