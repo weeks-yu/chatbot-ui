@@ -1,6 +1,9 @@
 import { SocksProxyAgent } from "socks-proxy-agent"
 
-export function getProxyAgent(proto: string | null, address: string | null, port: string | null) {
+export function getProxyAgent() {
+  proto = process.env.PROXY_PROTOCOL
+  address = process.env.PROXY_ADDRESS
+  port = process.env.PROXY_PORT
   if (proto === null || proto === "" || address === null || address === "" || port === null || port === "") {
     throw new Error(`getProxyAgent: empty proto, address or port`)
   }

@@ -104,7 +104,7 @@ export async function POST(req: Request) {
     let proxyAgent
     const isProxyEnabled = process.env.USE_PROXY === "true"
     if (isProxyEnabled) {
-      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      proxyAgent = getProxyAgent()
     }
     if (profile.use_azure_openai) {
       if (isProxyEnabled) {

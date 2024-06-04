@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     let proxyAgent
     const isProxyEnabled = process.env.USE_PROXY === "true"
     if (isProxyEnabled) {
-      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      proxyAgent = getProxyAgent()
       mistral = new OpenAI({
         apiKey: profile.mistral_api_key || "",
         baseURL: "https://api.mistral.ai/v1",

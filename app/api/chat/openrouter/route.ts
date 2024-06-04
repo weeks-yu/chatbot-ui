@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     let proxyAgent
     const isProxyEnabled = process.env.USE_PROXY === "true"
     if (isProxyEnabled) {
-      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      proxyAgent = getProxyAgent()
       openai = new OpenAI({
         apiKey: profile.openrouter_api_key || "",
         baseURL: "https://openrouter.ai/api/v1",

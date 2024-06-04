@@ -15,7 +15,7 @@ export async function GET() {
     let proxyAgent
     const isProxyEnabled = process.env.USE_PROXY === "true"
     if (isProxyEnabled) {
-      proxyAgent = getProxyAgent(process.env.PROXY_PROTOCOL, process.env.PROXY_ADDRESS, process.env.PROXY_PORT)
+      proxyAgent = getProxyAgent()
       openai = new OpenAI({
         apiKey: profile.openai_api_key || "",
         organization: profile.openai_organization_id,
