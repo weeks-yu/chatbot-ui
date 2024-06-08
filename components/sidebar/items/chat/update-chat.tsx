@@ -14,12 +14,15 @@ import { updateChat } from "@/db/chats"
 import { Tables } from "@/supabase/types"
 import { IconEdit } from "@tabler/icons-react"
 import { FC, useContext, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 interface UpdateChatProps {
   chat: Tables<"chats">
 }
 
 export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
+  const { t } = useTranslation()
+  
   const { setChats } = useContext(ChatbotUIContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -52,22 +55,22 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
 
       <DialogContent onKeyDown={handleKeyDown}>
         <DialogHeader>
-          <DialogTitle>Edit Chat</DialogTitle>
+          <DialogTitle>{t("Edit Chat")}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-1">
-          <Label>Name</Label>
+          <Label>{t("Name")}</Label>
 
           <Input value={name} onChange={e => setName(e.target.value)} />
         </div>
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setShowChatDialog(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
 
           <Button ref={buttonRef} onClick={handleUpdateChat}>
-            Save
+            {t("Save")}
           </Button>
         </DialogFooter>
       </DialogContent>

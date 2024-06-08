@@ -132,11 +132,11 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setShowDialog(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
 
           <Button ref={buttonRef} variant="destructive" onClick={handleDelete}>
-            Delete
+            {t("Delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

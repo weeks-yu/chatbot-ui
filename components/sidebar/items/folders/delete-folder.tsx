@@ -119,7 +119,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setShowFolderDialog(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
 
           <Button
@@ -127,7 +127,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
             variant="destructive"
             onClick={handleDeleteFolderAndItems}
           >
-            Delete Folder & Included Items
+            {t("Delete Folder & Included Items")}
           </Button>
 
           <Button
@@ -135,7 +135,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
             variant="destructive"
             onClick={handleDeleteFolderOnly}
           >
-            Delete Folder Only
+            {t("Delete Folder Only")}
           </Button>
         </DialogFooter>
       </DialogContent>

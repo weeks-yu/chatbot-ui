@@ -66,5 +66,10 @@
   "Delete": "删除",
   "Are you sure you want to delete this chat?": "确认删除这个聊天吗？",
   "Are you sure you want to delete this folder?": "确认删除这个文件夹吗？",
-  "Are you sure you want to delete": "确认删除"
+  "Are you sure you want to delete": "确认删除",
+  "Delete Folder & Included Items": "删除文件夹和内容",
+  "Delete Folder Only": "仅删除文件夹",
+  "Edit Chat": "编辑聊天",
+  "Name": "名字",
+  "Edit Folder": "编辑文件夹"
 }

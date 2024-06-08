@@ -84,6 +84,7 @@ import { FC, useContext, useEffect, useRef, useState } from "react"
 import profile from "react-syntax-highlighter/dist/esm/languages/hljs/profile"
 import { toast } from "sonner"
 import { SidebarDeleteItem } from "./sidebar-delete-item"
+import { useTranslation } from "react-i18next"
 
 interface SidebarUpdateItemProps {
   isTyping: boolean
@@ -102,6 +103,8 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
   updateState,
   isTyping
 }) => {
+  const { t } = useTranslation()
+
   const {
     workspaces,
     selectedWorkspace,
@@ -666,11 +669,11 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
 
           <div className="flex grow justify-end space-x-2">
             <Button variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
+              {t("Cancel")}
             </Button>
 
             <Button ref={buttonRef} onClick={handleUpdate}>
-              Save
+              {t("Save")}
             </Button>
           </div>
         </SheetFooter>

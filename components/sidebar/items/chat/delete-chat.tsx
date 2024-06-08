@@ -66,7 +66,7 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setShowChatDialog(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
 
           <Button
@@ -74,7 +74,7 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
             variant="destructive"
             onClick={handleDeleteChat}
           >
-            Delete
+            {t("Delete")}
           </Button>
         </DialogFooter>
       </DialogContent>
