@@ -15,12 +15,15 @@ import useHotkey from "@/lib/hooks/use-hotkey"
 import { Tables } from "@/supabase/types"
 import { IconTrash } from "@tabler/icons-react"
 import { FC, useContext, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 interface DeleteChatProps {
   chat: Tables<"chats">
 }
 
 export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
+  const { t } = useTranslation()
+  
   useHotkey("Backspace", () => setShowChatDialog(true))
 
   const { setChats } = useContext(ChatbotUIContext)
@@ -54,10 +57,10 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
 
       <DialogContent onKeyDown={handleKeyDown}>
         <DialogHeader>
-          <DialogTitle>Delete {chat.name}</DialogTitle>
+          <DialogTitle>{t("Delete")} {chat.name}</DialogTitle>
 
           <DialogDescription>
-            Are you sure you want to delete this chat?
+            {t("Are you sure you want to delete this chat?")}
           </DialogDescription>
         </DialogHeader>
 

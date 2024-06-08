@@ -16,10 +16,13 @@ import { useRouter } from "next/navigation"
 import { FC, useContext, useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
+import { useTranslation } from "react-i18next"
 
 interface WorkspaceSwitcherProps {}
 
 export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
+  const { t } = useTranslation()
+  
   useHotkey(";", () => setOpen(prevState => !prevState))
 
   const {
@@ -138,11 +141,11 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
             onClick={handleCreateWorkspace}
           >
             <IconPlus />
-            <div className="ml-2">New Workspace</div>
+            <div className="ml-2">{t("New Workspace")}</div>
           </Button>
 
           <Input
-            placeholder="Search workspaces..."
+            placeholder={t("Search workspaces...")}
             autoFocus
             value={search}
             onChange={e => setSearch(e.target.value)}

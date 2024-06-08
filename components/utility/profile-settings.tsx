@@ -42,10 +42,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { WithTooltip } from "../ui/with-tooltip"
 import { ThemeSwitcher } from "./theme-switcher"
+import { useTranslation } from "react-i18next"
 
 interface ProfileSettingsProps {}
 
 export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
+  const { t } = useTranslation()
+  
   const {
     profile,
     setProfile,
@@ -319,7 +322,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
         <div className="grow overflow-auto">
           <SheetHeader>
             <SheetTitle className="flex items-center justify-between space-x-2">
-              <div>User Settings</div>
+              <div>{t("User Settings")}</div>
 
               <Button
                 tabIndex={-1}
@@ -328,21 +331,21 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                 onClick={handleSignOut}
               >
                 <IconLogout className="mr-1" size={20} />
-                Logout
+                {t("Logout")}
               </Button>
             </SheetTitle>
           </SheetHeader>
 
           <Tabs defaultValue="profile">
             <TabsList className="mt-4 grid w-full grid-cols-2">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="keys">API Keys</TabsTrigger>
+              <TabsTrigger value="profile">{t("Profile")}</TabsTrigger>
+              <TabsTrigger value="keys">{t("API Keys")}</TabsTrigger>
             </TabsList>
 
             <TabsContent className="mt-4 space-y-4" value="profile">
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
-                  <Label>Username</Label>
+                  <Label>{t("Username")}</Label>
 
                   <div className="text-xs">
                     {username !== profile.username ? (
@@ -358,7 +361,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                 <div className="relative">
                   <Input
                     className="pr-10"
-                    placeholder="Username..."
+                    placeholder={t("Username...")}
                     value={username}
                     onChange={e => {
                       setUsername(e.target.value)
@@ -388,7 +391,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
               </div>
 
               <div className="space-y-1">
-                <Label>Profile Image</Label>
+                <Label>{t("Profile Image")}</Label>
 
                 <ImagePicker
                   src={profileImageSrc}
@@ -401,10 +404,10 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
               </div>
 
               <div className="space-y-1">
-                <Label>Chat Display Name</Label>
+                <Label>{t("Chat Display Name")}</Label>
 
                 <Input
-                  placeholder="Chat display name..."
+                  placeholder={t("Chat display name...")}
                   value={displayName}
                   onChange={e => setDisplayName(e.target.value)}
                   maxLength={PROFILE_DISPLAY_NAME_MAX}
@@ -413,14 +416,13 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
 
               <div className="space-y-1">
                 <Label className="text-sm">
-                  What would you like the AI to know about you to provide better
-                  responses?
+                  {t("What would you like the AI to know about you to provide better responses?")}
                 </Label>
 
                 <TextareaAutosize
                   value={profileInstructions}
                   onValueChange={setProfileInstructions}
-                  placeholder="Profile context... (optional)"
+                  placeholder={t("Profile context... (optional)")}
                   minRows={6}
                   maxRows={10}
                 />
@@ -454,8 +456,8 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                     onClick={() => setUseAzureOpenai(!useAzureOpenai)}
                   >
                     {useAzureOpenai
-                      ? "Switch To Standard OpenAI"
-                      : "Switch To Azure OpenAI"}
+                      ? t("Switch To Standard OpenAI")
+                      : t("Switch To Azure OpenAI")}
                   </Button>
                 </Label>
 
@@ -734,7 +736,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
             <WithTooltip
               display={
                 <div>
-                  Download Chatbot UI 1.0 data as JSON. Import coming soon!
+                  {t("Download Chatbot UI 1.0 data as JSON. Import coming soon!")}
                 </div>
               }
               trigger={

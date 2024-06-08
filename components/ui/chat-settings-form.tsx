@@ -19,6 +19,7 @@ import {
 import { Slider } from "./slider"
 import { TextareaAutosize } from "./textarea-autosize"
 import { WithTooltip } from "./with-tooltip"
+import { useTranslation } from "react-i18next"
 
 interface ChatSettingsFormProps {
   chatSettings: ChatSettings
@@ -33,6 +34,8 @@ export const ChatSettingsForm: FC<ChatSettingsFormProps> = ({
   useAdvancedDropdown = true,
   showTooltip = true
 }) => {
+  const { t } = useTranslation()
+  
   const { profile, models } = useContext(ChatbotUIContext)
 
   if (!profile) return null
@@ -40,7 +43,7 @@ export const ChatSettingsForm: FC<ChatSettingsFormProps> = ({
   return (
     <div className="space-y-3">
       <div className="space-y-1">
-        <Label>Model</Label>
+        <Label>{t("Model")}</Label>
 
         <ModelSelect
           selectedModelId={chatSettings.model}
@@ -51,11 +54,11 @@ export const ChatSettingsForm: FC<ChatSettingsFormProps> = ({
       </div>
 
       <div className="space-y-1">
-        <Label>Prompt</Label>
+        <Label>{t("Prompt")}</Label>
 
         <TextareaAutosize
           className="bg-background border-input border-2"
-          placeholder="You are a helpful AI assistant."
+          placeholder={t("You are a helpful AI assistant.")}
           onValueChange={prompt => {
             onChangeChatSettings({ ...chatSettings, prompt })
           }}
@@ -97,6 +100,8 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
   onChangeChatSettings,
   showTooltip
 }) => {
+  const { t } = useTranslation()
+  
   const { profile, selectedWorkspace, availableOpenRouterModels, models } =
     useContext(ChatbotUIContext)
 
@@ -119,7 +124,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
     <div className="mt-5">
       <div className="space-y-3">
         <Label className="flex items-center space-x-1">
-          <div>Temperature:</div>
+          <div>{t("Temperature") + ":"}</div>
 
           <div>{chatSettings.temperature}</div>
         </Label>
@@ -140,7 +145,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
 
       <div className="mt-6 space-y-3">
         <Label className="flex items-center space-x-1">
-          <div>Context Length:</div>
+          <div>{t("Context Length") + ":"}</div>
 
           <div>{chatSettings.contextLength}</div>
         </Label>
@@ -175,14 +180,14 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
           }
         />
 
-        <Label>Chats Include Profile Context</Label>
+        <Label>{t("Chats Include Profile Context")}</Label>
 
         {showTooltip && (
           <WithTooltip
             delayDuration={0}
             display={
               <div className="w-[400px] p-3">
-                {profile?.profile_context || "No profile context."}
+                {profile?.profile_context || t("No profile context.")}
               </div>
             }
             trigger={
@@ -203,7 +208,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
           }
         />
 
-        <Label>Chats Include Workspace Instructions</Label>
+        <Label>{t("Chats Include Workspace Instructions")}</Label>
 
         {showTooltip && (
           <WithTooltip
@@ -211,7 +216,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
             display={
               <div className="w-[400px] p-3">
                 {selectedWorkspace?.instructions ||
-                  "No workspace instructions."}
+                  t("No workspace instructions.")}
               </div>
             }
             trigger={
@@ -222,7 +227,7 @@ const AdvancedContent: FC<AdvancedContentProps> = ({
       </div>
 
       <div className="mt-5">
-        <Label>Embeddings Provider</Label>
+        <Label>{t("Embeddings Provider")}</Label>
 
         <Select
           value={chatSettings.embeddingsProvider}
