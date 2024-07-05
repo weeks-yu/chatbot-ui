@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils"
 import mistral from "@/public/providers/mistral.png"
 import groq from "@/public/providers/groq.png"
 import perplexity from "@/public/providers/perplexity.png"
+import moonshot from "@/public/providers/moonshot.png"
 import { ModelProvider } from "@/types"
 import { IconSparkles } from "@tabler/icons-react"
 import { useTheme } from "next-themes"
@@ -102,7 +103,18 @@ export const ModelIcon: FC<ModelIconProps> = ({
         />
       )
     case "moonshot":
-      return <IconSparkles size={width} />
+      return (
+        <Image
+          className={cn(
+            "rounded-sm p-0",
+            theme === "dark" ? "bg-white" : "border-DEFAULT border-black"
+          )}
+          src={moonshot.src}
+          alt="Moonshot"
+          width={width}
+          height={height}
+        />
+      )
     default:
       return <IconSparkles size={width} />
   }

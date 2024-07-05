@@ -1,6 +1,6 @@
 import { LLM } from "@/types"
 
-const MOONSHOT_PLATORM_LINK = "https://platform.moonshot.cn/"
+const MOONSHOT_PLATORM_LINK = "https://www.moonshot.cn/"
 
 const Moonshot_v1_8k: LLM = {
   modelId: "moonshot-v1-8k",
