@@ -101,6 +101,8 @@ export const ModelIcon: FC<ModelIconProps> = ({
           height={height}
         />
       )
+    case "moonshot":
+      return <IconSparkles size={width} />
     default:
       return <IconSparkles size={width} />
   }

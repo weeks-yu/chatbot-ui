@@ -19,6 +19,7 @@ interface APIStepProps {
   perplexityAPIKey: string
   useAzureOpenai: boolean
   openrouterAPIKey: string
+  moonshotAPIKey: string
   onOpenrouterAPIKeyChange: (value: string) => void
   onOpenaiAPIKeyChange: (value: string) => void
   onOpenaiOrgIDChange: (value: string) => void
@@ -34,6 +35,7 @@ interface APIStepProps {
   onGroqAPIKeyChange: (value: string) => void
   onPerplexityAPIKeyChange: (value: string) => void
   onUseAzureOpenaiChange: (value: boolean) => void
+  onMoonshotAPIKeyChange: (value: string) => void
 }
 
 export const APIStep: FC<APIStepProps> = ({
@@ -51,6 +53,7 @@ export const APIStep: FC<APIStepProps> = ({
   groqAPIKey,
   perplexityAPIKey,
   openrouterAPIKey,
+  moonshotAPIKey,
   useAzureOpenai,
   onOpenaiAPIKeyChange,
   onOpenaiOrgIDChange,
@@ -66,7 +69,8 @@ export const APIStep: FC<APIStepProps> = ({
   onGroqAPIKeyChange,
   onPerplexityAPIKeyChange,
   onUseAzureOpenaiChange,
-  onOpenrouterAPIKeyChange
+  onOpenrouterAPIKeyChange,
+  onMoonshotAPIKeyChange
 }) => {
   return (
     <>
@@ -236,6 +240,16 @@ export const APIStep: FC<APIStepProps> = ({
           type="password"
           value={openrouterAPIKey}
           onChange={e => onOpenrouterAPIKeyChange(e.target.value)}
+        />
+      </div>
+      <div className="space-y-1">
+        <Label>Moonshot API Key</Label>
+
+        <Input
+          placeholder="Moonshot API Key"
+          type="password"
+          value={moonshotAPIKey}
+          onChange={e => onMoonshotAPIKeyChange(e.target.value)}
         />
       </div>
     </>

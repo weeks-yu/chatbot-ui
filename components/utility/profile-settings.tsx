@@ -120,6 +120,10 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
   const [openrouterAPIKey, setOpenrouterAPIKey] = useState(
     profile?.openrouter_api_key || ""
   )
+  
+  const [moonshotAPIKey, setMoonshotAPIKey] = useState(
+    profile?.moonshot_api_key || ""
+  )
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -152,6 +156,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
       google_gemini_api_key: googleGeminiAPIKey,
       mistral_api_key: mistralAPIKey,
       groq_api_key: groqAPIKey,
+      moonshot_api_key: moonshotAPIKey,
       perplexity_api_key: perplexityAPIKey,
       use_azure_openai: useAzureOpenai,
       azure_openai_api_key: azureOpenaiAPIKey,
@@ -175,7 +180,8 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
       "mistral",
       "groq",
       "perplexity",
-      "openrouter"
+      "openrouter",
+      "moonshot"
     ]
 
     providers.forEach(async provider => {
@@ -721,6 +727,22 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                       type="password"
                       value={openrouterAPIKey}
                       onChange={e => setOpenrouterAPIKey(e.target.value)}
+                    />
+                  </>
+                )}
+              </div>
+              
+              <div className="space-y-1">
+                {envKeyMap["moonshot"] ? (
+                  <Label>Moonshot API key set by admin.</Label>
+                ) : (
+                  <>
+                    <Label>Moonshot API Key</Label>
+                    <Input
+                      placeholder="Moonshot API Key"
+                      type="password"
+                      value={moonshotAPIKey}
+                      onChange={e => setMoonshotAPIKey(e.target.value)}
                     />
                   </>
                 )}
