@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     // Groq is compatible with the OpenAI SDK
     let groq
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
+    const isProxyEnabled = getUsingProxy("GROQ")
     if (isProxyEnabled) {
       proxyAgent = getProxyAgent()
       groq = new OpenAI({

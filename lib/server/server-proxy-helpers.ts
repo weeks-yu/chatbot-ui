@@ -15,3 +15,11 @@ export function getProxyAgent() {
   }
   return proxyAgent
 }
+
+export function getUsingProxy(apiName: string | null) {
+    const apiList = process.env.PROXY_MODEL_LIST ? process.env.PROXY_MODEL_LIST.split(',') : []
+    if (apiList.includes(apiName)) {
+        return true
+    }
+    return false
+}

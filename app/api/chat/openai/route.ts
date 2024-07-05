@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     checkApiKey(profile.openai_api_key, "OpenAI")
 
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
+    const isProxyEnabled = getUsingProxy("OPENAI")
     if (isProxyEnabled) {
       proxyAgent = getProxyAgent()
     }

@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     let openai
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
+    const isProxyEnabled = getUsingProxy("OPENROUTER")
     if (isProxyEnabled) {
       proxyAgent = getProxyAgent()
       openai = new OpenAI({

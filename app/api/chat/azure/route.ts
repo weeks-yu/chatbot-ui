@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     }
     let azureOpenai
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
+    const isProxyEnabled = getUsingProxy("AZURE")
     if (isProxyEnabled) {
       proxyAgent = getProxyAgent()
       azureOpenai = new OpenAI({

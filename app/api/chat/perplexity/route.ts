@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     // Perplexity is compatible the OpenAI SDK
     let perplexity
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
+    const isProxyEnabled = getUsingProxy("PERPLEXITY")
     if (isProxyEnabled) {
       proxyAgent = getProxyAgent()
       perplexity = new OpenAI({
