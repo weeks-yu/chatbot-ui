@@ -24,3 +24,10 @@ export interface ChatAPIPayload {
   chatSettings: ChatSettings
   messages: Tables<"messages">[]
 }
+
+export interface OpenAIModel {
+  id: string
+  name: string
+  maxLength: number
+  tokenLimit: number
+}

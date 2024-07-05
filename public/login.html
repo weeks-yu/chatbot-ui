@@ -1,0 +1,17 @@
+<form>
+  <input
+    name="password"
+    type="password"
+    placeholder="Password"
+    required
+  />
+  <button type="submit">Unlock</button>
+</form>
+<script>
+  document.querySelector("form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const password = event.target.password.value;
+    document.cookie = `site_password=${password}; max-age=${60 * 60 * 24 * 365}`;
+    location.reload();
+  });
+</script>

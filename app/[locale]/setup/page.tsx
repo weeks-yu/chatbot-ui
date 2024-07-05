@@ -60,6 +60,7 @@ export default function SetupPage() {
   const [groqAPIKey, setGroqAPIKey] = useState("")
   const [perplexityAPIKey, setPerplexityAPIKey] = useState("")
   const [openrouterAPIKey, setOpenrouterAPIKey] = useState("")
+  const [moonshotAPIKey, setMoonshotAPIKey] = useState("")
 
   useEffect(() => {
     ;(async () => {
@@ -139,7 +140,8 @@ export default function SetupPage() {
       azure_openai_35_turbo_id: azureOpenai35TurboID,
       azure_openai_45_turbo_id: azureOpenai45TurboID,
       azure_openai_45_vision_id: azureOpenai45VisionID,
-      azure_openai_embeddings_id: azureOpenaiEmbeddingsID
+      azure_openai_embeddings_id: azureOpenaiEmbeddingsID,
+      moonshot_api_key: moonshotAPIKey
     }
 
     const updatedProfile = await updateProfile(profile.id, updateProfilePayload)
@@ -221,6 +223,8 @@ export default function SetupPage() {
               onUseAzureOpenaiChange={setUseAzureOpenai}
               openrouterAPIKey={openrouterAPIKey}
               onOpenrouterAPIKeyChange={setOpenrouterAPIKey}
+              moonshotAPIKey={moonshotAPIKey}
+              onMoonshotAPIKeyChange={setMoonshotAPIKey}
             />
           </StepContainer>
         )
