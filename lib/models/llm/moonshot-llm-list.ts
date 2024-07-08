@@ -33,10 +33,10 @@ const Moonshot_v1_32k: LLM = {
 }
 
 const Moonshot_v1_128k: LLM = {
-  modelId: "moonshot-v1-32k",
-  modelName: "Moonshot-v1-32k",
+  modelId: "moonshot-v1-128k",
+  modelName: "Moonshot-v1-128k",
   provider: "moonshot",
-  hostedId: "moonshot-v1-32k",
+  hostedId: "moonshot-v1-128k",
   platformLink: MOONSHOT_PLATORM_LINK,
   imageInput: false,
   pricing: {
