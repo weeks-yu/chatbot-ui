@@ -6,7 +6,7 @@ import { FileItemChunk } from "@/types"
 import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
-import { getProxyAgent } from "@/lib/server/server-proxy-helpers"
+import { getProxyAgent, getUsingProxy } from "@/lib/server/server-proxy-helpers"
 
 export async function POST(req: Request) {
   const json = await req.json()

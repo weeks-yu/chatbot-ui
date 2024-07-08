@@ -5,7 +5,7 @@ import { OpenAIStream, StreamingTextResponse } from "ai"
 import { ServerRuntime } from "next"
 import OpenAI from "openai"
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs"
-import { getProxyAgent } from "@/lib/server/server-proxy-helpers"
+import { getProxyAgent, getUsingProxy } from "@/lib/server/server-proxy-helpers"
 
 export const runtime: ServerRuntime = "nodejs"
 

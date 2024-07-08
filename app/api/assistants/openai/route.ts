@@ -1,7 +1,7 @@
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ServerRuntime } from "next"
 import OpenAI from "openai"
-import { getProxyAgent } from "@/lib/server/server-proxy-helpers"
+import { getProxyAgent, getUsingProxy } from "@/lib/server/server-proxy-helpers"
 
 export const runtime: ServerRuntime = "nodejs"
 
@@ -13,7 +13,7 @@ export async function GET() {
 
     let openai
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
+    const isProxyEnabled = getUsingProxy("OPENAI")
     if (isProxyEnabled) {
       proxyAgent = getProxyAgent()
       openai = new OpenAI({

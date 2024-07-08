@@ -3,7 +3,7 @@ import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { Database } from "@/supabase/types"
 import { createClient } from "@supabase/supabase-js"
 import OpenAI from "openai"
-import { getProxyAgent } from "@/lib/server/server-proxy-helpers"
+import { getProxyAgent, getUsingProxy } from "@/lib/server/server-proxy-helpers"
 
 export async function POST(request: Request) {
   const json = await request.json()
