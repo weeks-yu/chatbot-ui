@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     // Mistral is compatible the OpenAI SDK
     let mistral
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
+    const isProxyEnabled = getUsingProxy("MISTRAL")
     if (isProxyEnabled) {
       proxyAgent = getProxyAgent()
       mistral = new OpenAI({

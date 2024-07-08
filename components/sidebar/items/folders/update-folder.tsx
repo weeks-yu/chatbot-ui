@@ -14,12 +14,15 @@ import { updateFolder } from "@/db/folders"
 import { Tables } from "@/supabase/types"
 import { IconEdit } from "@tabler/icons-react"
 import { FC, useContext, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 interface UpdateFolderProps {
   folder: Tables<"folders">
 }
 
 export const UpdateFolder: FC<UpdateFolderProps> = ({ folder }) => {
+  const { t } = useTranslation()
+  
   const { setFolders } = useContext(ChatbotUIContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -52,22 +55,22 @@ export const UpdateFolder: FC<UpdateFolderProps> = ({ folder }) => {
 
       <DialogContent onKeyDown={handleKeyDown}>
         <DialogHeader>
-          <DialogTitle>Edit Folder</DialogTitle>
+          <DialogTitle>{t("Edit Folder")}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-1">
-          <Label>Name</Label>
+          <Label>{t("Name")}</Label>
 
           <Input value={name} onChange={e => setName(e.target.value)} />
         </div>
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setShowFolderDialog(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
 
           <Button ref={buttonRef} onClick={handleUpdateFolder}>
-            Save
+            {t("Save")}
           </Button>
         </DialogFooter>
       </DialogContent>

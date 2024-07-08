@@ -1123,6 +1123,7 @@ export type Database = {
           openai_api_key: string | null
           openai_organization_id: string | null
           openrouter_api_key: string | null
+          moonshot_api_key: string | null
           perplexity_api_key: string | null
           profile_context: string
           updated_at: string | null
@@ -1151,6 +1152,7 @@ export type Database = {
           openai_api_key?: string | null
           openai_organization_id?: string | null
           openrouter_api_key?: string | null
+          moonshot_api_key?: string | null
           perplexity_api_key?: string | null
           profile_context: string
           updated_at?: string | null
@@ -1179,6 +1181,7 @@ export type Database = {
           openai_api_key?: string | null
           openai_organization_id?: string | null
           openrouter_api_key?: string | null
+          moonshot_api_key?: string | null
           perplexity_api_key?: string | null
           profile_context?: string
           updated_at?: string | null

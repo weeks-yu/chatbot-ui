@@ -36,12 +36,10 @@ export async function POST(request: Request) {
 
     let openai
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
-    if (isProxyEnabled) {
-      proxyAgent = getProxyAgent()
-    }
     if (profile.use_azure_openai) {
+      const isProxyEnabled = getUsingProxy("AZURE")
       if (isProxyEnabled) {
+        proxyAgent = getProxyAgent()
         openai = new OpenAI({
           apiKey: profile.azure_openai_api_key || "",
           baseURL: `${profile.azure_openai_endpoint}/openai/deployments/${profile.azure_openai_embeddings_id}`,
@@ -58,7 +56,9 @@ export async function POST(request: Request) {
         })
       }
     } else {
+      const isProxyEnabled = getUsingProxy("OPENAI")
       if (isProxyEnabled) {
+        proxyAgent = getProxyAgent()
         openai = new OpenAI({
           apiKey: profile.openai_api_key || "",
           organization: profile.openai_organization_id,

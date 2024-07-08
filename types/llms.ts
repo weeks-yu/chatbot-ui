@@ -7,6 +7,7 @@ export type LLMID =
   | MistralLLMID
   | GroqLLMID
   | PerplexityLLMID
+  | MoonshotLLMID
 
 // OpenAI Models (UPDATED 5/13/24)
 export type OpenAILLMID =
@@ -56,6 +57,12 @@ export type PerplexityLLMID =
   | "sonar-small-online" // Sonar Small Online
   | "sonar-medium-chat" // Sonar Medium Chat
   | "sonar-medium-online" // Sonar Medium Online
+
+// Moonshot Models
+export type MoonshotLLMID =
+  | "moonshot-v1-8k" // LLaMA3-8b
+  | "moonshot-v1-32k" // LLaMA3-70b
+  | "moonshot-v1-128k" // Mixtral-8x7b
 
 export interface LLM {
   modelId: LLMID

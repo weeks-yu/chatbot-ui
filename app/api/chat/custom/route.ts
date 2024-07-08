@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     
     let custom
     let proxyAgent
-    const isProxyEnabled = process.env.USE_PROXY === "true"
+    const isProxyEnabled = getUsingProxy("CUSTOM")
     if (isProxyEnabled) {
       proxyAgent = getProxyAgent()
       custom = new OpenAI({
