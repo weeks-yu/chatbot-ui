@@ -1,0 +1,7 @@
+<html>
+	<body>
+		<h2>您已被邀请注册</h2>
+		<p>奇思Chat邀请您注册，如您不愿加入，请忽略此邮件。</p>
+		<p><a href="{{ .SiteURL }}/auth/v1/verify?token={{ .TokenHash }}&type=invite&redirect_to={{ .SiteURL }}" rel="noopener" target="_blank">确认邀请并注册</a></p>
+	</body>
+</html>
